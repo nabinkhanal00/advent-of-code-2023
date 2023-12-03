@@ -67,7 +67,7 @@ func challenge2() {
 	front := "one|two|three|four|five|six|seven|eight|nine"
 	frontExp := regexp.MustCompile("\\d|" + front)
 	backExp := regexp.MustCompile("\\d|" + reverse(front))
-	file, _ := os.Open("input_day1txt")
+	file, _ := os.Open("input_day1.txt")
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		line := scanner.Text()
