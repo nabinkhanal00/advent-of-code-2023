@@ -27,7 +27,7 @@ func twoDigitNumber(str string) int {
 }
 
 func challenge1() {
-	file, _ := os.Open("input_day1txt")
+	file, _ := os.Open("input_day1.txt")
 	scanner := bufio.NewScanner(file)
 	sum := 0
 	for scanner.Scan() {
