@@ -18,6 +18,7 @@ type Number struct {
 	visited bool
 }
 type Symbol struct {
+	s rune
 	r int
 	c int
 }
@@ -37,7 +38,7 @@ func parseLine(line string, lineNumber int) ([]Number, []Symbol) {
 			current = current + string(char)
 		} else {
 			if char != '.' {
-				symbols = append(symbols, Symbol{r: lineNumber, c: int(i)})
+				symbols = append(symbols, Symbol{s: char, r: lineNumber, c: int(i)})
 			}
 			start = false
 			if current != "" {
@@ -88,5 +89,48 @@ func challenge5() {
 		}
 	}
 	fmt.Println(sum)
+}
+func challenge6() {
 
+	f, err := os.Open("input_day3.txt")
+	if err != nil {
+		fmt.Println("error occurred: ", err.Error())
+		os.Exit(1)
+	}
+	content, err := io.ReadAll(f)
+	if err != nil {
+		fmt.Println("error occurred: ", err.Error())
+		os.Exit(1)
+	}
+	lines := strings.Split(string(content), "\n")
+	var numbers []Number
+	var symbols []Symbol
+	for index, line := range lines {
+		res, syms := parseLine(line, int(index))
+		numbers = append(numbers, res...)
+		symbols = append(symbols, syms...)
+	}
+	sum := 0
+	for _, s := range symbols {
+		if s.s == '*' {
+			count := 0
+			var num1, num2 int
+			for _, n := range numbers {
+				if math.Abs(float64(n.row-s.r)) <= 1 && n.columns-1 <= s.c && n.columne+1 >= s.c {
+					count++
+					if count == 1 {
+						num1 = n.value
+					} else if count == 2 {
+						num2 = n.value
+					} else if count > 2 {
+						break
+					}
+				}
+			}
+			if count == 2 {
+				sum += num1 * num2
+			}
+		}
+	}
+	fmt.Println(sum)
 }
