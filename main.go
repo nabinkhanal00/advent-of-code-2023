@@ -1,5 +1,5 @@
 package main
 
 func main() {
-	challenge6()
+	challenge7()
 }
