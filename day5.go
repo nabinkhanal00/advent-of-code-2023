@@ -153,28 +153,37 @@ func challenge10() {
 
 		}
 	}
-	result := math.MaxInt
 	// fmt.Println(seeds)
-	for r, v := range seeds {
-		for i := 0; i < v.rang; i++ {
-			val := v.start + i
-			res := getValue(seedToSoil, val)
-			// fmt.Print(res, " ")
-			res = getValue(soilToFertilizer, res)
-			// fmt.Print(res, " ")
-			res = getValue(fertilizerToWater, res)
-			// fmt.Print(res, " ")
-			res = getValue(waterToLight, res)
-			// fmt.Print(res, " ")
-			res = getValue(lightToTemperature, res)
-			// fmt.Print(res, " ")
-			res = getValue(temperatureToHumidity, res)
-			// fmt.Print(res, " ")
-			res = getValue(humidityToLocation, res)
-			// fmt.Println(res)
-			result = min(result, res)
-		}
-		fmt.Println(r)
+	c := make(chan int)
+	length := len(seeds)
+	for _, v := range seeds {
+		go func(s int, r int, c chan int) {
+
+			result := math.MaxInt
+			for i := 0; i < r; i++ {
+				val := s + i
+				res := getValue(seedToSoil, val)
+				// fmt.Print(res, " ")
+				res = getValue(soilToFertilizer, res)
+				// fmt.Print(res, " ")
+				res = getValue(fertilizerToWater, res)
+				// fmt.Print(res, " ")
+				res = getValue(waterToLight, res)
+				// fmt.Print(res, " ")
+				res = getValue(lightToTemperature, res)
+				// fmt.Print(res, " ")
+				res = getValue(temperatureToHumidity, res)
+				// fmt.Print(res, " ")
+				res = getValue(humidityToLocation, res)
+				// fmt.Println(res)
+				result = min(result, res)
+			}
+			c <- result
+		}(v.start, v.rang, c)
+	}
+	result := math.MaxInt
+	for i := 0; i < length; i++ {
+		result = min(result, <-c)
 	}
 	fmt.Println(result)
 }
