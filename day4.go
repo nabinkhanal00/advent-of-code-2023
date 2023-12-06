@@ -55,3 +55,41 @@ func challenge7() {
 	}
 	fmt.Println(sum)
 }
+func findMatching(a, b []int) int {
+
+	wmap := make(map[int]bool)
+	for _, w := range a {
+		wmap[w] = true
+	}
+	val := 0
+	for _, v := range b {
+		if _, ok := wmap[v]; ok {
+			val++
+		}
+	}
+	return val
+}
+func challenge8() {
+
+	f, err := os.Open("input_day4.txt")
+	if err != nil {
+		fmt.Println("error occurred: ", err.Error())
+		os.Exit(1)
+	}
+	scanner := bufio.NewScanner(f)
+	sum := 0
+	res := make(map[int]int)
+	cur := 1
+	for scanner.Scan() {
+		res[cur]++
+		line := scanner.Text()
+		winning, present := parseCard(line)
+		count := findMatching(winning, present)
+		for i := 0; i < count; i++ {
+			res[cur+i+1] += res[cur]
+		}
+		sum += res[cur]
+		cur++
+	}
+	fmt.Println(sum)
+}
